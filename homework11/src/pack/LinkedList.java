@@ -23,7 +23,7 @@ public class LinkedList<T> {
 	
 	
 	//remove after
-	public void RemoveAfter(Node<T> node) {
+	public void Remove(Node<T> node) {
 		if (node.NextNode == null) {
 			return;
 		}
@@ -88,5 +88,62 @@ public class LinkedList<T> {
         }
         printReverse(head.NextNode);
         System.out.print(head +" ");
+    }
+    
+    //I worked several hours on this trying to implement this correctly and this is the best
+    public void mergeSort() {
+        if (Size <= 1) {
+            return; // Already sorted
+        }
+
+        // Split the list into two halves
+        LinkedList<T> leftHalf = new LinkedList<>();
+        LinkedList<T> rightHalf = new LinkedList<>();
+        int middle = Size / 2;
+        Node<T> current = Head;
+        for (int i = 0; i < middle; i++) {
+            leftHalf.addToTail(current.Data);
+            current = current.NextNode;
+        }
+        for (int i = middle; i < Size; i++) {
+            rightHalf.addToTail(current.NextNode);
+            current = current.NextNode;
+        }
+
+        // Recursively sort the two halves
+        leftHalf.mergeSort();
+        rightHalf.mergeSort();
+
+        // Merge the sorted halves
+        merge(leftHalf, rightHalf);
+    }
+
+    private void merge(LinkedList<T> left, LinkedList<T> right) {
+        clear(); // Clear the original list
+
+        Node<T> leftCurrent = left.Head;
+        Node<T> rightCurrent = right.Head;
+
+        // Merge until one of the halves is empty
+        while (leftCurrent != null && rightCurrent != null) {
+            if (((String) leftCurrent.Data).compareTo((String) rightCurrent.Data) < 0) {
+                addToTail(leftCurrent.Data);
+                leftCurrent = leftCurrent.NextNode;
+            } else {
+                addToTail(rightCurrent.Data);
+                rightCurrent = rightCurrent.NextNode;
+            }
+        }
+
+        // If there are remaining elements in left or right, append them
+        while (leftCurrent != null) {
+            addToTail(leftCurrent.Data);
+            leftCurrent = leftCurrent.NextNode;
+        }
+
+        while (rightCurrent != null) {
+            addToTail(rightCurrent.Data);
+            rightCurrent = rightCurrent.NextNode;
+        }
     }
 }
